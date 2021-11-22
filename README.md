@@ -3,13 +3,15 @@ pxpincher_ros Package
 
 This metapackage is intended for controlling and simulating the PhantomX Pincher robot at the RST.
 
+Please note that this noetic-devel branch is adapted from kinetic-devel and has not been tested thoroughly.
+
 Installation
 ------------
 
-First, make sure that ROS is installed properly (we are currently on ROS kinetic).
+First, make sure that ROS is installed properly (we are currently on ROS noetic).
 This package utilizes [ros_control](http://wiki.ros.org/ros_control) for controlling the robot:
     
-    sudo apt-get install ros-kinetic-ros-control ros-kinetic-ros-controllers
+    sudo apt-get install ros-noetic-ros-control ros-noetic-ros-controllers
 
 
 Now it is time to checkout this package:
@@ -26,7 +28,7 @@ Check if everything compiles:
 If you have unmet dependencies, try to install them using *rosdep*:
 
      cd ~/catkin_ws
-     rosdep install --from-paths src --ignore-src --rosdistro kinetic -y
+     rosdep install --from-paths src --ignore-src --rosdistro=noetic -y
 
 Getting Started
 ---------------
