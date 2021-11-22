@@ -77,7 +77,7 @@ void PhantomXControl::initialize()
   signal(SIGINT, pxpincher::PhantomXControl::phantomXSigHandler);
     
   // instantiate arm action client
-  std::string arm_action_topic = "/arm_controller/follow_joint_trajectory";
+  std::string arm_action_topic = "arm_controller/follow_joint_trajectory";
   n.param("arm_action_topic", arm_action_topic, arm_action_topic);
   ROS_INFO("Waiting for arm action server to start.");
   _arm_action = make_unique<actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction>>(arm_action_topic, true);
@@ -85,7 +85,7 @@ void PhantomXControl::initialize()
 
   
   // instantiate gripper action client
-  std::string gripper_action_topic = "/gripper_controller/gripper_cmd";
+  std::string gripper_action_topic = "gripper_controller/gripper_cmd";
   n.param("gripper_action_topic", gripper_action_topic, gripper_action_topic);
   ROS_INFO("Arm action server found. Waiting for gripper action server to start.");
   _gripper_action = make_unique<actionlib::SimpleActionClient<control_msgs::GripperCommandAction>>(gripper_action_topic, true);
@@ -148,7 +148,7 @@ void PhantomXControl::initialize()
       ROS_WARN("'/controller_manager/switch_controller' not avaiable. Cannot switch between joint interfaces, which is required by e.g. setJointVel");
  
   
-  _arm_speed_forwarding_pub = n.advertise<std_msgs::Float64MultiArray>("/arm_speed_forwarder/command", 1);
+  _arm_speed_forwarding_pub = n.advertise<std_msgs::Float64MultiArray>("arm_speed_forwarder/command", 1);
  
   switchArmControlMode(ArmControlMode::TRAJECTORY_FOLLOWING);
 
@@ -185,11 +185,11 @@ void PhantomXControl::initialize()
 
   // Transformations
   // TODO rosparam
-  _map_joint_to_joint_frame[0] = "/arm_shoulder_pan_servo_link";
-  _map_joint_to_joint_frame[1] = "/arm_shoulder_lift_servo_link";
-  _map_joint_to_joint_frame[2] = "/arm_elbow_flex_servo_link";
-  _map_joint_to_joint_frame[3] = "/arm_wrist_flex_servo_link";
-  _map_joint_to_joint_frame[255] = "/gripper_link"; // TODO: ids from yaml file
+  _map_joint_to_joint_frame[0] = "arm_shoulder_pan_servo_link";
+  _map_joint_to_joint_frame[1] = "arm_shoulder_lift_servo_link";
+  _map_joint_to_joint_frame[2] = "arm_elbow_flex_servo_link";
+  _map_joint_to_joint_frame[3] = "arm_wrist_flex_servo_link";
+  _map_joint_to_joint_frame[255] = "gripper_link"; // TODO: ids from yaml file
   
   // get transform: base to first joint 
   tf::StampedTransform transform;
@@ -497,7 +497,7 @@ void PhantomXControl::setJointVel(const Eigen::Ref<const JointVector>& velocitie
 {
     if (_arm_speed_forwarding_pub.getNumSubscribers() == 0)
     {
-        ROS_WARN("setJointVel(): no subscribers on topic '/arm_speed_forwarder/command'");
+        ROS_WARN("setJointVel(): no subscribers on topic 'arm_speed_forwarder/command'");
         return;
     }
         
@@ -734,8 +734,8 @@ void PhantomXControl::getEndeffectorState(tf::StampedTransform& base_T_gripper)
 {
     try
     {
-      _tf.waitForTransform("/arm_base_link", "/gripper_link", ros::Time(0), ros::Duration(10.0) );
-      _tf.lookupTransform("/arm_base_link", "/gripper_link", ros::Time(0), base_T_gripper); // TODO: param
+      _tf.waitForTransform("arm_base_link", "gripper_link", ros::Time(0), ros::Duration(10.0) );
+      _tf.lookupTransform("arm_base_link", "gripper_link", ros::Time(0), base_T_gripper); // TODO: param
     }
     catch (tf::TransformException &ex)
     {
@@ -1560,13 +1560,13 @@ bool PhantomXControl::switchArmControlMode(ArmControlMode mode)
     controller_manager_msgs::SwitchController switch_msg;
     if (mode == ArmControlMode::TRAJECTORY_FOLLOWING)
     {
-        switch_msg.request.stop_controllers.push_back("/arm_speed_forwarder"); // TODO params
-        switch_msg.request.start_controllers.push_back("/arm_controller");
+        switch_msg.request.stop_controllers.push_back("arm_speed_forwarder"); // TODO params
+        switch_msg.request.start_controllers.push_back("arm_controller");
     }
     else if (mode == ArmControlMode::SPEED_FORWARDING)
     {
-        switch_msg.request.stop_controllers.push_back("/arm_controller");
-        switch_msg.request.start_controllers.push_back("/arm_speed_forwarder");
+        switch_msg.request.stop_controllers.push_back("arm_controller");
+        switch_msg.request.start_controllers.push_back("arm_speed_forwarder");
     }
     else return false;
     

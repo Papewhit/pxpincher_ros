@@ -602,16 +602,16 @@ public:
   static void phantomXSigHandler(int sig)
   {
     // cancel the all goals
-    actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> ac_arm("/arm_controller/follow_joint_trajectory", true);
+    actionlib::SimpleActionClient<control_msgs::FollowJointTrajectoryAction> ac_arm("arm_controller/follow_joint_trajectory", true);
     ac_arm.waitForServer(ros::Duration(0.1));
     ac_arm.cancelAllGoals();
-    actionlib::SimpleActionClient<control_msgs::GripperCommandAction> ac_gripper("/gripper_controller/gripper_action", true);
+    actionlib::SimpleActionClient<control_msgs::GripperCommandAction> ac_gripper("gripper_controller/gripper_action", true);
     ac_gripper.waitForServer(ros::Duration(0.1));
     ac_gripper.cancelAllGoals();
     
     // send also zero velocity command (in case of speed forwarding control via a topic)
     ros::NodeHandle n;
-    ros::Publisher pub = n.advertise<std_msgs::Float64MultiArray>("/arm_speed_forwarder/command", 1, true);
+    ros::Publisher pub = n.advertise<std_msgs::Float64MultiArray>("arm_speed_forwarder/command", 1, true);
     std_msgs::Float64MultiArray data;
     data.data.resize( JointVector::RowsAtCompileTime, 0.0 );
       // check that there is at least a single subscriber connected
@@ -751,7 +751,7 @@ private:
 //   double _gripper_max_speed = 0;
   std::string _gripper_joint_name;
   
-  std::string _arm_base_link_frame = "/arm_base_link"; // TODO ros param
+  std::string _arm_base_link_frame = "arm_base_link"; // TODO ros param
   
   std::map<std::string, int> _map_joint_to_index;
   std::map<int, std::string> _map_joint_to_joint_frame;

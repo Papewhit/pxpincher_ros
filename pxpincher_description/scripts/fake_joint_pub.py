@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 
 # Original code https://github.com/corot/turtlebot_arm.git
 

@@ -10,7 +10,7 @@
   <node name="fake_joint_pub" pkg="pxpincher_description" type="fake_joint_pub.py" output="screen"/> 
 
   <!-- Now load robot model -->
-  <param name="robot_description" command="$(find xacro)/xacro.py '$(find pxpincher_description)/urdf/pincher_arm.urdf.xacro'"/>
+  <param name="robot_description" command="$(find xacro)/xacro '$(find pxpincher_description)/urdf/pincher_arm.urdf.xacro'"/>
   <node name="robot_state_pub" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
   <!-- Start Arbotix driver -->
